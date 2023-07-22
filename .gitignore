@@ -1,0 +1,13 @@
+venv/
+scrapy_env/
+bdscrawler/bdscrawler/logs/*/
+*.cfg
+*.config
+*.pem
+*.log
+*.json
+__pycache__/
+*.py[cod]
+*$py.class
+.idea/
+

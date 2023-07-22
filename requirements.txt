@@ -1,0 +1,11 @@
+scrapy
+pandas
+unidecode
+geocoder
+pymongo
+scrapy-user-agents
+# for tor
+stem
+requests[socks]
+scrapy-tor-proxy-rotation
+scrapy-fake-useragent
