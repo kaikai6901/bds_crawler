@@ -46,10 +46,10 @@ class CustomRedirectMiddleware(BaseRedirectMiddleware):
             retry_number = request.meta.get('retry_number', 0)
             if retry_number <= self.max_redirect_times:
                 # change here
-                new_ip = spider.tor_controller.renew_ip()
-                if not new_ip:
-                    raise Exception('FatalError: Failed to find a new IP')
-                spider.log(f'New Tor IP: {new_ip}')
+                # new_ip = spider.tor_controller.renew_ip()
+                # if not new_ip:
+                #     raise Exception('FatalError: Failed to find a new IP')
+                # spider.log(f'New Tor IP: {new_ip}')
                 # time.sleep(self.delay_redirect * (retry_number + 1))
                 # return response
                 request.meta['retry_number'] = retry_number + 1

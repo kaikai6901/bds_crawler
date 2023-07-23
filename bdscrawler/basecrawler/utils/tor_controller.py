@@ -6,29 +6,48 @@ import configparser
 from stem import Signal
 from stem.control import Controller
 from stem.util.log import get_logger
-from bdscrawler.bdscrawler.settings import CONFIG_PATH, TOR_CONFIG_NAME, IP_CHECK_SERVICE
+from bdscrawler.bdscrawler.settings import CONFIG_PATH, TOR_CONFIG_NAME, IP_CHECK_SERVICE, PRIVOXY_ENDPOINT_PATH
 logger = get_logger()
 logger.propagate = False
 
 class TorController:
-    def __init__(self, allow_reuse_ip_after: int = 10):
+    def __init__(self, allow_reuse_ip_after: int = 20):
         self.allow_reuse_ip_after = allow_reuse_ip_after
         self.config = configparser.ConfigParser()
         self.config.read(CONFIG_PATH)
-        self.port = self.config.getint(TOR_CONFIG_NAME, 'port')
-        self.password = self.config.get(TOR_CONFIG_NAME, 'password')
+        # self.password = self.config.get(TOR_CONFIG_NAME, 'password')
         self.used_ips = list()
-        self.proxies = {
-            "http": self.config.get(TOR_CONFIG_NAME, 'default_proxy'),
-            "https": self.config.get(TOR_CONFIG_NAME, 'default_proxy')
-        }
-        self.renew_ip()
+        self.proxy_list = self.read_config_proxy()
+        self.counter = 0
+        self.current_port = self.proxy_list[self.counter][1]
+        self.current_proxy = self.proxy_list[self.counter][0]
 
+
+    def get_current_proxy(self):
+        self.current_port = self.proxy_list[self.counter][1]
+        self.current_proxy = self.proxy_list[self.counter][0]
+        self.counter = (self.counter + 1) % (len(self.proxy_list))
+        print(self.counter)
+        return self.current_proxy
+
+    def read_config_proxy(self):
+        with open(PRIVOXY_ENDPOINT_PATH, 'r') as file:
+            proxy_config_list = file.read().splitlines()
+        proxy_list = list()
+        for proxy_config in proxy_config_list:
+            if proxy_config.startswith('#'):
+                continue
+
+            proxy, control_port = proxy_config.split(',')
+            control_port = int(control_port)
+            proxy_list.append((proxy, control_port))
+
+        return proxy_list
     def get_ip(self) -> str:
         """Returns the current IP used by Tor."""
 
         with requests.Session() as session:
-            r = session.get(IP_CHECK_SERVICE, proxies=self.proxies)
+            r = session.get(IP_CHECK_SERVICE, proxies={'http': self.current_proxy})
 
             if r.ok:
                 session.close()
@@ -40,8 +59,8 @@ class TorController:
     def change_ip(self) -> None:
         """Send IP change signal to Tor."""
 
-        with Controller.from_port(port=self.port) as controller:
-            controller.authenticate(password=self.password)
+        with Controller.from_port(port=self.current_port) as controller:
+            # controller.authenticate(password=self.password)
             controller.signal(Signal.NEWNYM)
 
     def renew_ip(self) -> None:

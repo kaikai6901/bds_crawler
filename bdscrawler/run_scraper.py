@@ -7,14 +7,19 @@ from scrapy.utils.project import get_project_settings
 import os
 
 class Scraper:
-    def __init__(self, ignore_runtime_before=True, ignore_old_request=True):
+    def __init__(self, ignore_runtime_before=True, ignore_old_request=True, spider='alonhadat'):
         setting_file_path = 'bdscrawler.bdscrawler.settings'
         os.environ.setdefault('SCRAPY_SETTINGS_MODULE', setting_file_path)
         self.ignore_runtime_before = ignore_runtime_before
         self.ignore_old_request = ignore_old_request
         self.process = CrawlerProcess(get_project_settings())
-        self.spider = HomedySpider
+        if spider == 'alonhadat':
+            self.spider = AlonhadatSpider
+        elif spider == 'homedy':
+            self.spider = HomedySpider
+        elif spider == 'bds123':
+            self.spider = BDS123Spider
 
     def run_spiders(self):
-        self.process.crawl(self.spider, ignore_runtime_before=self.ignore_runtime_before, ignore_old_request=self.ignore_old_request)
+        self.process.crawl(self.spider, ignore_runtime_before=self.ignore_runtime_before, ignore_old_request=self.ignore_old_request, )
         self.process.start()

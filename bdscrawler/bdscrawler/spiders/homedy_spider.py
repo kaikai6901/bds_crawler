@@ -48,6 +48,7 @@ class HomedySpider(BaseSpider):
     number_error = 0
 
     def parse(self, response):
+
         self.current_page = self.get_absolute_path(response.url)
         self.custom_logging.current(self.current_page)
 
@@ -119,7 +120,6 @@ class HomedySpider(BaseSpider):
         return news.load_item()
 
     def generate_next_page(self, current_page):
-        return None
         if current_page == 'end':
             return None
         if current_page == 'https://homedy.com/ban-can-ho-ha-noi/p200':

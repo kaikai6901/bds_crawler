@@ -114,25 +114,27 @@ def convert_price_unit(unit: str):
 class ProxyManager:
     _list_proxies = None
     _counter = 0
-    _previous_proxy = None
-    _max_counter = 3
     @staticmethod
     def read_proxy_list(_config_path):
         with open(_config_path, 'r') as file:
-            proxy_list = file.read().splitlines()
+            proxy_config_list = file.read().splitlines()
+
+        proxy_list = list()
+
+        for proxy_config in proxy_config_list:
+            if proxy_config.startswith('#'):
+                continue
+            proxy, control_port = proxy_config.split(',')
+            control_port = int(control_port)
+            proxy_list.append((proxy, control_port))
         ProxyManager._list_proxies = proxy_list
 
     @staticmethod
-    def get_random_proxy():
+    def get_proxy():
         if not ProxyManager._list_proxies:
             ProxyManager.read_proxy_list(PRIVOXY_ENDPOINT_PATH)
         # Shuffle the proxy list if all proxies have been returned
-        proxy = random.choice(ProxyManager._list_proxies)
-        if ProxyManager._counter > ProxyManager._max_counter and proxy == ProxyManager._previous_proxy:
-            proxy = ProxyManager.get_random_proxy()  # Recursively call until a different proxy is found
-        if proxy != ProxyManager._previous_proxy:
-            ProxyManager._counter = 0
-        ProxyManager._previous_proxy = proxy
-        ProxyManager._counter += 1
-        return proxy, ProxyManager._counter
+        proxy, control_port = ProxyManager._list_proxies[ProxyManager._counter]
+        ProxyManager._counter = (ProxyManager._counter + 1) / len(ProxyManager._list_proxies)
+        return proxy, control_port
 

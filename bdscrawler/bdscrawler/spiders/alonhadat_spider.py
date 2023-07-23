@@ -95,7 +95,7 @@ class AlonhadatSpider(BaseSpider):
 
             next_page = self.generate_next_page(self.current_page)
             print(next_page)
-            if next_page != None:
+            if next_page is not None:
                 yield scrapy.Request(next_page, callback=self.parse, errback=self.errback_func)
             else:
                 self.custom_logging.current('end')

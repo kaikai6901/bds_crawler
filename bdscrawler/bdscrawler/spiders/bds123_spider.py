@@ -15,6 +15,7 @@ class BDS123Spider(BaseSpider):
     start_urls = ['https://bds123.vn/ban-can-ho-chung-cu-ha-noi.html?orderby=moi-nhat&page=1']
     domain = 'https://bds123.vn/'
     spider_code = '0003'
+    number_error = 0
     number_old_request = 0
     max_old_request = 40
     custom_settings = {

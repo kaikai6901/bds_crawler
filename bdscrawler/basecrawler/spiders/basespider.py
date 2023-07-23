@@ -46,7 +46,7 @@ class BaseSpider(scrapy.Spider):
                 yield scrapy.Request(url, callback=self.parse, errback=self.errback_func, priority=1)
         else:
             next_page = self.generate_next_page(self.current_page)
-            if next_page != None:
+            if next_page is not None:
                 yield scrapy.Request(next_page, callback=self.parse, errback=self.errback_func, priority=1)
             else:
                 for news_url in self.list_request:
@@ -166,7 +166,7 @@ class BaseSpider(scrapy.Spider):
         self.client.close()
     def errback_func(self, failure):
         self.custom_logging.log(event='failure', message=repr(failure))
-
+        print(failure)
     def get_absolute_path(self, news_url):
         if news_url is None:
             return None
