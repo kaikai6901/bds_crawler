@@ -103,12 +103,12 @@ TOR_CONFIG_NAME = 'Tor'
 
 
 # LOGGING
-LOGGING_DATABASE = 'dev'
+LOGGING_DATABASE = 'scrapy'
 LOGGING_COLLECTION = 'log'
 ROOT_LOG_PATH = 'bdscrawler/bdscrawler/logs/'
 
 # ITEM DATABASE
-ITEM_DATABASE = 'dev'
+ITEM_DATABASE = 'scrapy'
 ITEM_COLLECTION = 'item'
 
 # TOR CONTROLLER
