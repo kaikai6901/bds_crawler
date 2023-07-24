@@ -1,3 +1,5 @@
+import datetime
+
 import scrapy
 from bdscrawler.bdscrawler.settings import ITEM_DATABASE, ITEM_COLLECTION
 from bdscrawler.basecrawler.logs.BaseLogging import BaseLogging
@@ -50,7 +52,7 @@ class BaseSpider(scrapy.Spider):
                 yield scrapy.Request(next_page, callback=self.parse, errback=self.errback_func, priority=1)
             else:
                 for news_url in self.list_request:
-                    yield scrapy.Request(news_url, callback=self.parse, errback=self.errback_func)
+                    yield scrapy.Request(news_url, callback=self.parse_news, errback=self.errback_func)
 
 
     def parse(self, response):
@@ -190,8 +192,7 @@ class BaseSpider(scrapy.Spider):
         if published_at is None:
             return 2
         last_time_in_page = document.get("last_time_in_page", '')
-
-        if last_time_in_page.date() < published_at.date():
+        if last_time_in_page is not None and last_time_in_page.date() < published_at.date():
             try:
                 self.collection.update_one({"_id": document["_id"]}, {"$set": {"last_time_in_page": published_at}})
             except Exception as e:

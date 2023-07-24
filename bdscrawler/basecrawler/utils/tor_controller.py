@@ -60,7 +60,7 @@ class TorController:
         """Send IP change signal to Tor."""
 
         with Controller.from_port(port=self.current_port) as controller:
-            # controller.authenticate(password=self.password)
+            controller.authenticate()
             controller.signal(Signal.NEWNYM)
 
     def renew_ip(self) -> None:

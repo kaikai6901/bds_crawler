@@ -7,13 +7,10 @@ class AlonhadatRandomHeaderGenerator:
     _list_accept_encoding = ['gzip, deflate, br', 'gzip, deflate', 'gzip, br']
     _list_accept_language = ['vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5', 'en-US,en;q=0.5',
                              'vi-VN,vi;q=0.9,fr-FR;q=0.5', 'en-US,en;q=0.5;q=0.9,fr-FR', 'en-US,en;q=0.5;q=0.6,en']
-    _previous_proxy = None
-    _previous_headers = None
+
 
     @staticmethod
-    def generate_random_header(proxy):
-        if proxy == AlonhadatRandomHeaderGenerator._previous_proxy:
-            return AlonhadatRandomHeaderGenerator._previous_headers
+    def generate_random_header():
         headers = {}
         headers['Accept-Encoding'] = random.choice(AlonhadatRandomHeaderGenerator._list_accept_encoding)
         headers['Accept-Language'] = random.choice(AlonhadatRandomHeaderGenerator._list_accept_language)
@@ -28,8 +25,4 @@ class AlonhadatRandomHeaderGenerator:
         headers["Sec-Fetch-Site"] = "same-origin"
         headers['Sec-Fetch-Dest'] = "empty"
         headers['Sec-Fetch-Mode'] = 'cors'
-
-        AlonhadatRandomHeaderGenerator._previous_proxy = proxy
-        AlonhadatRandomHeaderGenerator._previous_headers = headers
-
         return headers

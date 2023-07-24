@@ -30,7 +30,7 @@ class TorProxyMiddleware(object):
                 raise Exception('FatalError: Failed to find a new IP')
             spider.log(f'New Tor IP: {new_ip}')
 
-        spider.log(f'Current Ip is: {spider.tor_controller.get_ip()}')
+        # spider.log(f'Current Ip is: {spider.tor_controller.get_ip()}')
 
         if 'proxy' in request.meta:
             if request.meta['proxy'] is not None:

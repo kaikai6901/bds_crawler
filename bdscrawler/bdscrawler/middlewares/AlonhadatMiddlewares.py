@@ -76,8 +76,7 @@ class CustomHeadersMiddleware(object):
 
 
     def process_request(self, request, spider):
-        proxy = request.meta['proxy']
-        headers = AlonhadatRandomHeaderGenerator.generate_random_header(proxy)
+        headers = AlonhadatRandomHeaderGenerator.generate_random_header()
 
         for header, value in headers.items():
             request.headers[header] = value

@@ -14,7 +14,7 @@ class AlonhadatSpider(BaseSpider):
     domain = 'https://alonhadat.com.vn/'
     spider_code = '0001'
     number_old_request = 0
-    max_old_request = 40
+    max_old_request = 100
     number_error = 0
 
     custom_settings = {
@@ -64,7 +64,7 @@ class AlonhadatSpider(BaseSpider):
         elif 'xac-thuc-nguoi-dung' in response.url:
             self.number_error = self.number_error + 1
             if self.number_error <= self.settings.getint('MAX_NUMBER_ERROR', 3):
-                self.custom_logging.error(self.get_absolute_path(self.current_page))
+                self.custom_logging.debug(self.get_absolute_path(self.current_page), event='error by authen page')
             else:
                 raise CloseSpider(reason="max time authen error")
         else:
@@ -80,7 +80,7 @@ class AlonhadatSpider(BaseSpider):
                 news_url = self.get_absolute_path(news_url)
                 news_id = self.extract_id_from_url(news_url)
 
-                res = self.update_old_item(news_id , published_at)
+                res = self.update_old_item(news_id, published_at)
                 if res == 0:
                     self.number_old_request = 0
                     self.list_request.append(news_url)
@@ -88,30 +88,31 @@ class AlonhadatSpider(BaseSpider):
                 else:
                     self.number_old_request += 1
 
-            self.current_page = self.get_absolute_path(response.url)
-            if self.number_old_request > self.max_old_request:
-                self.custom_logging.current('end')
-                self.current_page = 'end'
+        self.current_page = self.get_absolute_path(self.generate_next_page(self.current_page))
 
-            next_page = self.generate_next_page(self.current_page)
-            print(next_page)
-            if next_page is not None:
-                yield scrapy.Request(next_page, callback=self.parse, errback=self.errback_func)
-            else:
-                self.custom_logging.current('end')
+        if self.number_old_request > self.max_old_request:
+            self.custom_logging.current('end')
+            self.current_page = 'end'
 
-                for url in self.list_request:
-                    news_id = self.extract_id_from_url(url)
-                    res = self.update_old_item(news_id, None)
-                    if res == 0:
-                        yield scrapy.Request(url, callback=self.parse_news, errback=self.errback_func)
-                    else:
-                        self.custom_logging.response(url)
+        next_page = self.generate_next_page(self.current_page)
+        print(next_page)
+        if next_page is not None:
+            yield scrapy.Request(next_page, callback=self.parse, errback=self.errback_func)
+        else:
+            self.custom_logging.current('end')
+
+            for url in self.list_request:
+                news_id = self.extract_id_from_url(url)
+                res = self.update_old_item(news_id, None)
+                if res == 0:
+                    yield scrapy.Request(url, callback=self.parse_news, errback=self.errback_func)
+                else:
+                    self.custom_logging.response(url)
     def parse_news(self, response):
         if 'xac-thuc-nguoi-dung' in response.url:
             self.number_error = self.number_error + 1
             if self.number_error <= self.settings.getint('MAX_NUMBER_ERROR', 3):
-                self.custom_logging.error(self.get_absolute_path(response.url))
+                self.custom_logging.debug(self.get_absolute_path(response.url), event='error by authen page')
             else:
                 raise CloseSpider(reason="max time authen error")
 

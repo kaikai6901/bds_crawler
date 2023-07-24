@@ -20,6 +20,7 @@ class HomedySpider(BaseSpider):
             'scrapy_fake_useragent.middleware.RetryUserAgentMiddleware': 510,
             'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 420,
             'bdscrawler.basecrawler.middlewares.basemiddlewares.TorProxyMiddleware': 400,
+            'bdscrawler.bdscrawler.middlewares.HomedyMiddlewares.CustomHeadersMiddleware': 410,
             'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware': None,
         },
         'FAKEUSERAGENT_PROVIDERS': [
@@ -37,7 +38,8 @@ class HomedySpider(BaseSpider):
             'bdscrawler.basecrawler.pipelines.BasePipeline.SavingToDatabasePipeline': 500
         },
         'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408, 429, 403],
-        'RETRY_PRIORITY_ADJUST': -1
+        'RETRY_PRIORITY_ADJUST': -1,
+        'CUSTOM_HEADER_ENABLED': True,
 
     }
     domain = 'https://homedy.com/'
@@ -89,6 +91,7 @@ class HomedySpider(BaseSpider):
 
     def parse_news(self, response):
         news = HomedyItemLoader(item=HomedyItem(), response=response)
+        self.custom_logging.response(self.get_absolute_path(response.url))
         news.add_value('news_url', response.url)
         news.add_xpath('title',
                        '/html/body/div[1]/div[5]/div[@class="float-in"]/div[2]/div/div[1]/div/div[1]/div/h1/text()')
