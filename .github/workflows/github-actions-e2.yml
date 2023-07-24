@@ -11,18 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     
   steps:
-    - name: Checkout the files
-      uses: actions/checkout@v2
+      - name: Checkout the files
+       uses: actions/checkout@v2
 
-    - name: Deploy to Crawler server
-      uses: easingthemes/ssh-deploy@main
-      env:
-        SSH_PRIVATE_KEY: ${ { secrets.EC2_SSH_KEY }}
-        SOURCE: "./"
-        REMOTE_HOST: ${ { secrets.HOST_DNS }}
-        REMOTE_USER: ${ { secrets.USERNAME }}
-        TARGET: ${ { secrets.TARGET_DIR }}
-    - name: Install dependencies
-      run: |
-        pwd
+     - name: Deploy to Crawler server
+       uses: easingthemes/ssh-deploy@main
+       env:
+         SSH_PRIVATE_KEY: ${ { secrets.EC2_SSH_KEY }}
+         SOURCE: "./"
+         REMOTE_HOST: ${ { secrets.HOST_DNS }}
+         REMOTE_USER: ${ { secrets.USERNAME }}
+         TARGET: ${ { secrets.TARGET_DIR }}
+     - name: Install dependencies
+       run: |
+         pwd
 
