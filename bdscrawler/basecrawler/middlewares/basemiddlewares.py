@@ -32,7 +32,7 @@ class TorProxyMiddleware(object):
 
         # spider.log(f'Current Ip is: {spider.tor_controller.get_ip()}')
 
-        if 'proxy' in request.meta:
+        if 'proxy' in request.meta and 'retry_number' not in request.meta:
             if request.meta['proxy'] is not None:
                 proxy = request.meta['proxy']
         spider.log(proxy)
