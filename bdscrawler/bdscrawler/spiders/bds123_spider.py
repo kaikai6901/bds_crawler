@@ -17,7 +17,7 @@ class BDS123Spider(BaseSpider):
     spider_code = '0003'
     number_error = 0
     number_old_request = 0
-    max_old_request = 40
+    max_old_request = 100
     custom_settings = {
         'DOWNLOADER_MIDDLEWARES': {
             'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,

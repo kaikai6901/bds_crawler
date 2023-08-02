@@ -46,7 +46,7 @@ class HomedySpider(BaseSpider):
     list_request = list()
     spider_code = '0002'
     number_old_request = 0
-    max_old_request = 40
+    max_old_request = 100
     number_error = 0
 
     def parse(self, response):
