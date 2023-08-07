@@ -200,6 +200,8 @@ class BaseSpider(scrapy.Spider):
                 print(message)
                 self.custom_logging.debug(message)
                 return 1
+        if last_time_in_page is not None and last_time_in_page < datetime.datetime.now() - datetime.timedelta(days=3):
+            return 3
         return 2
 
 

@@ -26,7 +26,6 @@ def check_is_running(spider):
     client.close()
     return check_running
 def main():
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--ignore-runtime-before', default='true')
     parser.add_argument('--ignore_old_request', default='false')

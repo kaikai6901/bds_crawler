@@ -9,7 +9,7 @@ import pandas as pd
 class HomedySpider(BaseSpider):
     name = 'homedy'
     start_urls = [
-        "https://homedy.com/ban-can-ho-ha-noi/p1"
+        "https://homedy.com/ban-can-ho-ha-noi/p1?sort=new"
     ]
 
     custom_settings = {
@@ -125,7 +125,7 @@ class HomedySpider(BaseSpider):
     def generate_next_page(self, current_page):
         if current_page == 'end':
             return None
-        if current_page == 'https://homedy.com/ban-can-ho-ha-noi/p200':
+        if current_page == 'https://homedy.com/ban-can-ho-ha-noi/p200?sort=new':
             return None
         if current_page is None:
             return self.start_urls[0]

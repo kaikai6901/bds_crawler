@@ -14,7 +14,7 @@ class AlonhadatSpider(BaseSpider):
     domain = 'https://alonhadat.com.vn/'
     spider_code = '0001'
     number_old_request = 0
-    max_old_request = 200
+    max_old_request = 41
     number_error = 0
 
     custom_settings = {
@@ -86,7 +86,8 @@ class AlonhadatSpider(BaseSpider):
                     self.list_request.append(news_url)
                     self.custom_logging.request(news_url)
                 else:
-                    self.number_old_request += 1
+                    if res == 3:
+                        self.number_old_request += 1
 
         self.current_page = self.get_absolute_path(self.generate_next_page(self.current_page))
 
