@@ -1,7 +1,7 @@
 import datetime
 
 import scrapy
-from bdscrawler.bdscrawler.settings import ITEM_DATABASE, ITEM_COLLECTION
+from bdscrawler.bdscrawler.settings import *
 from bdscrawler.basecrawler.logs.BaseLogging import BaseLogging
 from bdscrawler.basecrawler.databaseservice.logging_service import LoggingDatabaseService
 from bdscrawler.basecrawler.dao.MongoDB import MongoDB
@@ -194,13 +194,13 @@ class BaseSpider(scrapy.Spider):
         last_time_in_page = document.get("last_time_in_page", '')
         if last_time_in_page is not None and last_time_in_page.date() < published_at.date():
             try:
-                self.collection.update_one({"_id": document["_id"]}, {"$set": {"last_time_in_page": published_at}})
+                self.collection.update_one({"_id": document["_id"]}, {"$set": {"last_time_in_page": published_at, "updateTime": datetime.datetime.now()}})
             except Exception as e:
                 message = f"Unable to update old item {news_id} because {e}"
                 print(message)
                 self.custom_logging.debug(message)
                 return 1
-        if last_time_in_page is not None and last_time_in_page < datetime.datetime.now() - datetime.timedelta(days=3):
+        if published_at is not None and published_at < datetime.datetime.now() - datetime.timedelta(days=3):
             return 3
         return 2
 

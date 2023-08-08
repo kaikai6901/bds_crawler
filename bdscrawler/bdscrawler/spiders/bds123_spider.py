@@ -17,7 +17,7 @@ class BDS123Spider(BaseSpider):
     spider_code = '0003'
     number_error = 0
     number_old_request = 0
-    max_old_request = 100
+    max_old_request = 40
     custom_settings = {
         'DOWNLOADER_MIDDLEWARES': {
             'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
@@ -105,7 +105,8 @@ class BDS123Spider(BaseSpider):
 
                 res = self.update_old_item(news_id, convert_time(last_time_in_page))
                 if res != 0:
-                    self.number_old_request += 1
+                    if res == 3:
+                        self.number_old_request += 1
                     continue
                 self.number_old_request = 0
 

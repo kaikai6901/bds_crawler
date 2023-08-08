@@ -46,7 +46,7 @@ class HomedySpider(BaseSpider):
     list_request = list()
     spider_code = '0002'
     number_old_request = 0
-    max_old_request = 100
+    max_old_request = 40
     number_error = 0
 
     def parse(self, response):
@@ -69,16 +69,18 @@ class HomedySpider(BaseSpider):
             square = product_unit.xpath('./li[2]/span/text()').get()
             price_per_m2 = product_unit.xpath('./li[3]/text()').get()
             address = product_unit.xpath('./li[4]/@title').get()
+            published_at = item_selector.xpath('./div[contains(@class, "product-item-top")]/div[contains(@class, "box-price-agency")]/div[contains(@class, "time")]/text()').get()
 
             news_id = self.extract_id_from_url(news_url)
-            res = self.update_old_item(news_id, None)
+            res = self.update_old_item(news_id, convert_time(published_at))
 
             if res == 0:
                 self.number_old_request= 0
                 self.custom_logging.request(self.get_absolute_path(news_url))
                 self.list_request.append(self.get_absolute_path(news_url))
             else:
-                self.number_old_request += 1
+                if res == 3:
+                    self.number_old_request += 1
                 print(self.number_old_request)
 
         next_page = self.generate_next_page(self.current_page)

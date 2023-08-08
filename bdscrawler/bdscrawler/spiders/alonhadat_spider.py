@@ -14,7 +14,7 @@ class AlonhadatSpider(BaseSpider):
     domain = 'https://alonhadat.com.vn/'
     spider_code = '0001'
     number_old_request = 0
-    max_old_request = 41
+    max_old_request = 40
     number_error = 0
 
     custom_settings = {
