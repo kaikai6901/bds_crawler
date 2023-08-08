@@ -88,8 +88,8 @@ class AlonhadatSpider(BaseSpider):
                 else:
                     if res == 3:
                         self.number_old_request += 1
-
-        self.current_page = self.get_absolute_path(self.generate_next_page(self.current_page))
+        if self.current_page != 'end':
+            self.current_page = self.get_absolute_path(self.generate_next_page(self.current_page))
 
         if self.number_old_request > self.max_old_request:
             self.custom_logging.current('end')
