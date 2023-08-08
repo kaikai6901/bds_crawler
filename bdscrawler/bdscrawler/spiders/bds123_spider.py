@@ -105,8 +105,7 @@ class BDS123Spider(BaseSpider):
 
                 res = self.update_old_item(news_id, convert_time(last_time_in_page))
                 if res != 0:
-                    if res == 2:
-                        self.number_old_request += 1
+                    self.number_old_request += 1
                     continue
                 self.number_old_request = 0
 
