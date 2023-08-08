@@ -61,6 +61,9 @@ def convert_time(t: str):
     elif 'phut truoc' in t:
         minutes = int(t.split(' ')[0])
         delta = datetime.timedelta(minutes=minutes)
+    elif 'tuan truoc' in t:
+        weeks = int(t.split(' ')[0])
+        delta = datetime.timedelta(weeks=weeks)
     else:
         raise ValueError('Not handle this datetime format')
 
